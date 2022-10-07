@@ -14,7 +14,7 @@ syncthing.exe cli config defaults device compression set always
 syncthing.exe cli config defaults folder path set c:\tmp
 
 syncthing.exe cli config devices add^
-  --device-id 7VHFNSU-PMOKRFH-HDHVTXV-26I73YZ-647XTPT-524CNHG-VEUCYJK-ATCMGAI^
+  --device-id W4VTQIB-HAI2DHP-6ZCI5XD-EOV6NNI-3PGCRJJ-4MNHZ53-QKNXFF2-GA23HAN^
   --name LAPTOP-JOSCH^
   --introducer^
   --auto-accept-folders^
