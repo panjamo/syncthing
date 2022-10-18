@@ -30,3 +30,7 @@ echo /*/**>>c:\tmp\.stignore
 echo /BIN.zip>>c:\tmp\.stignore
 echo /*.dmp>>c:\tmp\.stignore
 syncthing.exe cli config folders add --id TMP-%COMPUTERNAME% --path c:\tmp --label TMP-%COMPUTERNAME% --paused
+
+powershell "$s=(New-Object -COM WScript.Shell).CreateShortcut([Environment]::GetFolderPath('Desktop')+'\Syncthing.lnk');$s.TargetPath='%CD%\syncthing.exe';$s.Save()"
+
+
