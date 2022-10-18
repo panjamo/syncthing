@@ -20,6 +20,7 @@ syncthing.exe cli config devices add^
   --auto-accept-folders^
   --compression always
 
+mkdir c:\tmp
 del /A:H /q /f c:\tmp\.stignore
 echo // !/DebugTools/syncthing-excutables/install.cmd>>c:\tmp\.stignore
 echo // /DebugTools/syncthing-excutables>>c:\tmp\.stignore
