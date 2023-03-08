@@ -9,8 +9,10 @@ $action = {
         &taskkill.exe /IM TPPSrv.exe /F
         Start-Sleep -Milliseconds 2000 -Verbose
 
-        # VS Post Build Step
+        # @REM VS Post Build Step
         # 7z a -t7z -mx9  c:\temp\transfer\TPPSrv.7z "$(TargetPath)" "$(tptrackinglibpackageroot)\native\x64\lib\$(LibraryType)\*.dll"
+        # @REM focus explorer to result for faster copy
+        # explorer.exe /select,"c:\temp\transfer\TPPSrv.7z" & set ERRORLEVEL=0
         & "C:\Program Files\7-Zip\7z.exe" x $Event.SourceEventArgs.Name "-o$folder"
 
         Start-Service TPPSrv -Verbose
@@ -23,8 +25,10 @@ $action = {
         $folder = 'c:\Program Files\EFA\webapps\eri'
         & iisreset /stop
 
-        # VS Post Build Step
+        # @REM VS Post Build Step
         # 7z a -t7z -mx9  -r c:\temp\transfer\eri.7z ".\$(OutDir)\*.*"
+        # @REM focus explorer to result for faster copy
+        # explorer.exe /select,"c:\temp\transfer\TPPSrv.7z" & set ERRORLEVEL=0
         Remove-Item -Recurse -Force $folder -ErrorAction Continue
         & "C:\Program Files\7-Zip\7z.exe" x $Event.SourceEventArgs.Name "-o$folder"
 
