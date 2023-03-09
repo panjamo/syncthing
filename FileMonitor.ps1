@@ -4,16 +4,19 @@ $action = {
     {
         $folder = 'c:\Program Files\EFA'
 
-        &taskkill.exe /IM TPPSrv.exe /F
-        Start-Sleep -Seconds 1 -Verbose
-        &taskkill.exe /IM TPPSrv.exe /F
-        Start-Sleep -Milliseconds 2000 -Verbose
+        # Start-Process -FilePath 'net' -ArgumentList 'stop TPPSrv' -Verbose -WindowStyle Minimized
+        # Start-Sleep -Seconds 1 -Verbose
+        # & taskkill.exe /IM TPPSrv.exe /F | Out-Host
+        # Start-Sleep -Seconds 1 -Verbose
+        # & taskkill.exe /IM TPPSrv.exe /F | Out-Host
+        # Start-Sleep -Milliseconds 2000 -Verbose
+        Stop-Service TPPSrv -Verbose
 
         # @REM VS Post Build Step
         # 7z a -t7z -mx9  c:\temp\transfer\TPPSrv.7z "$(TargetPath)" "$(tptrackinglibpackageroot)\native\x64\lib\$(LibraryType)\*.dll"
         # @REM focus explorer to result for faster copy
         # explorer.exe /select,"c:\temp\transfer\TPPSrv.7z" & set ERRORLEVEL=0
-        & "C:\Program Files\7-Zip\7z.exe" x $Event.SourceEventArgs.Name "-o$folder"
+        & "C:\Program Files\7-Zip\7z.exe" x -aoa $Event.SourceEventArgs.Name "-o$folder" | Out-Host
 
         Start-Service TPPSrv -Verbose
         Write-Host ($Event.SourceEventArgs.Name) done.
@@ -28,9 +31,9 @@ $action = {
         # @REM VS Post Build Step
         # 7z a -t7z -mx9  -r c:\temp\transfer\eri.7z ".\$(OutDir)\*.*"
         # @REM focus explorer to result for faster copy
-        # explorer.exe /select,"c:\temp\transfer\TPPSrv.7z" & set ERRORLEVEL=0
+        # explorer.exe /select,"c:\temp\transfer\eri.7z" & set ERRORLEVEL=0
         Remove-Item -Recurse -Force $folder -ErrorAction Continue
-        & "C:\Program Files\7-Zip\7z.exe" x $Event.SourceEventArgs.Name "-o$folder"
+        & "C:\Program Files\7-Zip\7z.exe" x $Event.SourceEventArgs.Name "-o$folder" | Out-Host
 
         & iisreset /start
         Write-Host ($Event.SourceEventArgs.Name) done.
