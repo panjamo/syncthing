@@ -1,15 +1,23 @@
 $action = { 
+    if (-not (Test-Path -Path $Event.SourceEventArgs.Name -PathType Leaf)) { return }
+        
     Write-Host incoming event ($Event.SourceEventArgs.Name)
-    if ($Event.SourceEventArgs.Name -eq "TPPSrv.7z")
-    {
+    if ($Event.SourceEventArgs.Name -eq "TPPSrv.7z") {
         $folder = 'c:\Program Files\EFA'
 
-        # Start-Process -FilePath 'net' -ArgumentList 'stop TPPSrv' -Verbose -WindowStyle Minimized
-        # Start-Sleep -Seconds 1 -Verbose
-        # & taskkill.exe /IM TPPSrv.exe /F | Out-Host
-        # Start-Sleep -Seconds 1 -Verbose
-        # & taskkill.exe /IM TPPSrv.exe /F | Out-Host
-        # Start-Sleep -Milliseconds 2000 -Verbose
+        # $stopsvc = Start-Job -ScriptBlock {Stop-Service TPPSrv -Verbose}
+        # Wait-Job $stopsvc -Timeout 5
+        # if ($stopsvc -ne "Completed") {
+        #    Stop-Job $stopsvc -Verbose
+        #    Remove-Job $stopsvc -Verbose
+        #    Stop-Process -name TPPSrv.exe -Force -Verbose
+        # }
+        #  Start-Process -FilePath 'net' -ArgumentList 'stop TPPSrv' -Verbose -WindowStyle Minimized -NoNewWindow
+        #  Start-Sleep -Seconds 3 -Verbose
+        #  & taskkill.exe /IM TPPSrv.exe /F | Out-Host
+        #  Start-Sleep -Seconds 500 -Verbose
+        #  & taskkill.exe /IM TPPSrv.exe /F | Out-Host
+        #  Start-Sleep -Milliseconds 500 -Verbose
         Stop-Service TPPSrv -Verbose
 
         # @REM VS Post Build Step
@@ -23,8 +31,7 @@ $action = {
         Remove-Item ($Event.SourceEventArgs.Name) -Verbose
     }
 
-    if ($Event.SourceEventArgs.Name -eq "Eri.7z")
-    {
+    if ($Event.SourceEventArgs.Name -eq "Eri.7z") {
         $folder = 'c:\Program Files\EFA\webapps\eri'
         & iisreset /stop
 
