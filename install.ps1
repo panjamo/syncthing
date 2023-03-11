@@ -1,20 +1,22 @@
 Start-Process -FilePath '.\syncthing.exe' -ArgumentList 'cli operations shutdown' -Wait
 Start-Sleep -Seconds 3
-Remove-Item -LiteralPath ($env:LOCALAPPDATA + '\Syncthing') -Force -Recurse
-Start-Process -FilePath '.\syncthing.exe'  -WindowStyle Minimized -ArgumentList 'serve --no-default-folder'
+# Remove-Item -LiteralPath ($env:LOCALAPPDATA + '\Syncthing') -Force -Recurse
+New-Item -Path '.\config' -ItemType Directory -ErrorAction SilentlyContinue
+
+Start-Process -FilePath '.\syncthing.exe'  -WindowStyle Minimized -ArgumentList 'serve --no-default-folder --home=.\config'
 Start-Sleep -Seconds 3
 # Start-Process -FilePath '.\syncthing.exe' -ArgumentList 'cli operations shutdown' -Wait
-[XML]$config = Get-Content ($env:LOCALAPPDATA + '\Syncthing\config.xml')
+[XML]$config = Get-Content ('.\config\config.xml')
 #$config.configuration.gui.apikey = "iVPAH5Vi7VTmdoJKiyxsRZc4MTfzk7qy"
 #$config.save($env:LOCALAPPDATA + '\Syncthing\config.xml')
 # & .\syncthing.exe cli operations shutdown
 #Start-Process -FilePath '.\syncthing.exe'  -WindowStyle Minimized -ArgumentList 'serve --no-default-folder'
 #Start-Sleep -Seconds 5
 
-& .\syncthing.exe cli config defaults device auto-accept-folders set true
-& .\syncthing.exe cli config defaults folder rescan-intervals set 600
-& .\syncthing.exe cli config defaults device compression set always
-& .\syncthing.exe cli config defaults folder path set c:\tmp
+& .\syncthing.exe cli config defaults device auto-accept-folders set true --home=.\config
+& .\syncthing.exe cli config defaults folder rescan-intervals set 600 --home=.\config
+& .\syncthing.exe cli config defaults device compression set always --home=.\config
+& .\syncthing.exe cli config defaults folder path set c:\tmp --home=.\config
 
 $device = @'
 {
@@ -46,7 +48,10 @@ Invoke-WebRequest `
 -Uri "http://127.0.0.1:8384/rest/config/devices/VRBIB4S-MTKWVLA-5YCETVO-NDTGBW2-E7KONTA-QDHDDCG-G6LPGIU-YYUFEAL" `
 -body $device -Method "PUT" -ContentType "application/json" -Headers @{ "X-API-Key" = $config.configuration.gui.apikey }
 
-$s=(New-Object -COM WScript.Shell).CreateShortcut([Environment]::GetFolderPath('Desktop')+'\Syncthing1.lnk');$s.TargetPath=((Get-Location).ToString()+'\syncthing.exe');$s.Save()
+$s=(New-Object -COM WScript.Shell).CreateShortcut([Environment]::GetFolderPath('Desktop')+'\Syncthing.lnk');
+$s.TargetPath=((Get-Location).ToString()+'\syncthing.exe');
+$s.Arguments='--home='+(Get-Location).ToString()+'\config'
+$s.Save()
 
 
 # syncthing.exe cli config devices add^
