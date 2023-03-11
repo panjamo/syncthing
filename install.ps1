@@ -84,3 +84,36 @@ $s.Save()
 # echo /*/**>>c:\tmp\.stignore
 # echo /BIN.zip>>c:\tmp\.stignore
 # echo /*.dmp>>c:\tmp\.stignore
+
+
+# Events einfangen und darauf reagieren
+# https://manpages.ubuntu.com/manpages/bionic/man7/syncthing-event-api.7.html
+# (Invoke-WebRequest -Uri "http://127.0.0.1:8384/rest/events?events=DeviceRejected&since=40"  -Method "GET"  -Headers @{ "X-API-Key" = $config.configuration.gui.apikey }) | ConvertFrom-Json
+
+# [
+    # {
+    # "id": 40,
+    # "globalID": 1751,
+    # "time": "2023-03-12T00:24:01.8040928+01:00",
+    # "type": "DeviceRejected",
+    # "data": {
+    #   "address": "20.3.109.80:1025",
+    #   "device": "VIJPBYI-WX4TB7J-OYCPMYL-UI57P5T-FZJTLL6-F2WKXMD-HDJ3KD6-X5FQUQG",
+    #   "name": "rwrktstnw00000Z"
+    # }
+#   }
+# ]
+
+# $device = @'
+# {
+#     "deviceID": "VIJPBYI-WX4TB7J-OYCPMYL-UI57P5T-FZJTLL6-F2WKXMD-HDJ3KD6-X5FQUQG",
+#     "name": "rwrktstnw00000Z"
+# }
+# '@
+
+# Invoke-WebRequest `
+# -Uri "http://127.0.0.1:8384/rest/config/devices/VIJPBYI-WX4TB7J-OYCPMYL-UI57P5T-FZJTLL6-F2WKXMD-HDJ3KD6-X5FQUQG" `
+# -body $device -Method "PUT" -ContentType "application/json" -Headers @{ "X-API-Key" = $config.configuration.gui.apikey }
+
+
+
