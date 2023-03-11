@@ -46,6 +46,15 @@ $action = {
         Write-Host ($Event.SourceEventArgs.Name) done.
         Remove-Item ($Event.SourceEventArgs.Name) -Verbose
     }
+
+    if ($Event.SourceEventArgs.Name -eq "printpdf.7z") {
+        $folder = 'c:\Program Files\EFA'
+        # 7z a -t7z -mx9  -r c:\temp\transfer\printpdf.7z ".\$(OutDir)\*.exe"
+        # @REM explorer.exe /select,"c:\temp\transfer\printpdf.7z" & set ERRORLEVEL=0
+        & "C:\Program Files\7-Zip\7z.exe" x -aoa $Event.SourceEventArgs.Name "-o$folder" | Out-Host
+        Write-Host ($Event.SourceEventArgs.Name) done.
+        Remove-Item ($Event.SourceEventArgs.Name) -Verbose
+    }
 }
 
 $watcher = New-Object System.IO.FileSystemWatcher
