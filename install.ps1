@@ -46,7 +46,8 @@ Invoke-WebRequest `
 -Uri "http://127.0.0.1:8384/rest/config/devices/VRBIB4S-MTKWVLA-5YCETVO-NDTGBW2-E7KONTA-QDHDDCG-G6LPGIU-YYUFEAL" `
 -body $device -Method "PUT" -ContentType "application/json" -Headers @{ "X-API-Key" = $config.configuration.gui.apikey }
 
-$s=(New-Object -COM WScript.Shell).CreateShortcut([Environment]::GetFolderPath('Desktop')+'\Syncthing.lnk');$s.TargetPath='%CD%\syncthing.exe';$s.Save()
+$s=(New-Object -COM WScript.Shell).CreateShortcut([Environment]::GetFolderPath('Desktop')+'\Syncthing1.lnk');$s.TargetPath=((Get-Location).ToString()+'\syncthing.exe');$s.Save()
+
 
 # syncthing.exe cli config devices add^
 #   --device-id W4VTQIB-HAI2DHP-6ZCI5XD-EOV6NNI-3PGCRJJ-4MNHZ53-QKNXFF2-GA23HAN^
