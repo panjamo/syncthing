@@ -1,16 +1,22 @@
 # @REM https://docs.syncthing.net/rest/config.html
 # @REM https://www.mankier.com/7/syncthing-rest-api
 
-[XML]$config = Get-Content ('.\config\config.xml')
+&"C:\Program Files\Internet Explorer\iexplore.exe"
 
-Invoke-WebRequest `
-    -Uri "http://127.0.0.1:8384/rest/system/shutdown" `
-    -Method "POST" `
-    -Headers @{ "X-API-Key" = $config.configuration.gui.apikey }
+Start-Sleep -Seconds 10
 
+[XML]$config = Get-Content ('.\config\config.xml') -ErrorAction SilentlyContinue
+
+if ($config) {
+    Invoke-WebRequest `
+        -Uri "http://127.0.0.1:8384/rest/system/shutdown" `
+        -Method "POST" `
+        -Headers @{ "X-API-Key" = $config.configuration.gui.apikey } `
+        -ErrorAction SilentlyContinue
+}
 Start-Sleep -Seconds 3
 
-Remove-Item  ([Environment]::GetFolderPath('Desktop')+'\Syncthing.lnk')
+Remove-Item  ([Environment]::GetFolderPath('Desktop') + '\Syncthing.lnk') -ErrorAction SilentlyContinue
 Remove-Item '.\config' -Force -Recurse -ErrorAction SilentlyContinue
 
 New-Item -Path '.\config' -ItemType Directory -ErrorAction SilentlyContinue
@@ -28,7 +34,6 @@ Invoke-WebRequest `
     -Method "PUT" `
     -Headers @{ "X-API-Key" = $config.configuration.gui.apikey } `
     -body ($defaultFolder | ConvertTo-Json)
-
 
 $defaultDevice = (Invoke-WebRequest -Uri "http://127.0.0.1:8384/rest/config/defaults/device"  -Method "GET"  -Headers @{ "X-API-Key" = $config.configuration.gui.apikey }) | ConvertFrom-Json
 $defaultDevice.autoAcceptFolders = $true
@@ -66,15 +71,15 @@ $device = @'
 '@
 
 Invoke-WebRequest `
--Uri "http://127.0.0.1:8384/rest/config/devices/VRBIB4S-MTKWVLA-5YCETVO-NDTGBW2-E7KONTA-QDHDDCG-G6LPGIU-YYUFEAL" `
--body $device -Method "PUT" -ContentType "application/json" -Headers @{ "X-API-Key" = $config.configuration.gui.apikey }
+    -Uri "http://127.0.0.1:8384/rest/config/devices/VRBIB4S-MTKWVLA-5YCETVO-NDTGBW2-E7KONTA-QDHDDCG-G6LPGIU-YYUFEAL" `
+    -body $device -Method "PUT" -ContentType "application/json" -Headers @{ "X-API-Key" = $config.configuration.gui.apikey }
 
-$s=(New-Object -COM WScript.Shell).CreateShortcut([Environment]::GetFolderPath('Desktop')+'\Syncthing.lnk');
-$s.TargetPath=((Get-Location).ToString()+'\syncthing.exe');
-$s.Arguments='--home='+(Get-Location).ToString()+'\config'
+$s = (New-Object -COM WScript.Shell).CreateShortcut([Environment]::GetFolderPath('Desktop') + '\Syncthing.lnk');
+$s.TargetPath = ((Get-Location).ToString() + '\syncthing.exe');
+$s.Arguments = '--home=' + (Get-Location).ToString() + '\config'
 $s.Save()
 
-  # mkdir c:\tmp
+# mkdir c:\tmp
 # del /A:H /q /f c:\tmp\.stignore
 # echo // !/DebugTools/syncthing-excutables/install.cmd>>c:\tmp\.stignore
 # echo // /DebugTools/syncthing-excutables>>c:\tmp\.stignore
@@ -91,16 +96,16 @@ $s.Save()
 # (Invoke-WebRequest -Uri "http://127.0.0.1:8384/rest/events?events=DeviceRejected&since=40"  -Method "GET"  -Headers @{ "X-API-Key" = $config.configuration.gui.apikey }) | ConvertFrom-Json
 
 # [
-    # {
-    # "id": 40,
-    # "globalID": 1751,
-    # "time": "2023-03-12T00:24:01.8040928+01:00",
-    # "type": "DeviceRejected",
-    # "data": {
-    #   "address": "20.3.109.80:1025",
-    #   "device": "VIJPBYI-WX4TB7J-OYCPMYL-UI57P5T-FZJTLL6-F2WKXMD-HDJ3KD6-X5FQUQG",
-    #   "name": "rwrktstnw00000Z"
-    # }
+# {
+# "id": 40,
+# "globalID": 1751,
+# "time": "2023-03-12T00:24:01.8040928+01:00",
+# "type": "DeviceRejected",
+# "data": {
+#   "address": "20.3.109.80:1025",
+#   "device": "VIJPBYI-WX4TB7J-OYCPMYL-UI57P5T-FZJTLL6-F2WKXMD-HDJ3KD6-X5FQUQG",
+#   "name": "rwrktstnw00000Z"
+# }
 #   }
 # ]
 
