@@ -36,19 +36,27 @@ $action = {
         # Stop-Service EfaConSvc -Verbose
         # Stop-Process -name EFACon -Force -Verbose
 
-        $stopsvc = Start-Job -ScriptBlock {Stop-Service EfaConSvc -Verbose}
-        Wait-Job $stopsvc -Timeout 5
-        if ($stopsvc -ne "Completed") {
-           Stop-Job $stopsvc -Verbose
-           Remove-Job $stopsvc -Verbose
-           Stop-Process -name EFACon -Force -Verbose
-        }
+        # $stopsvc = Start-Job -ScriptBlock {Stop-Service EfaConSvc -Verbose}
+        # Start-Sleep -Milliseconds 3000
+        # Wait-Job $stopsvc -Timeout 5
+        # if ($stopsvc -ne "Completed") {
+        #    Stop-Job $stopsvc -Verbose
+        #    Remove-Job $stopsvc -Verbose
+        #    Stop-Process -name EFACon -Force -Verbose
+        # }
 
         # @REM VS Post Build Step
         # 7z a -t7z -mx9  -r c:\temp\transfer\efacon.7z "$(TargetDir)\*.*"
         # @REM focus explorer to result for faster copy
         # explorer.exe /select,"c:\temp\transfer\efacon.7z" & set ERRORLEVEL=0
-        Remove-Item -Recurse -Force $folder -ErrorAction Continue -Verbose
+        Stop-Process -name EFACon -Force -Verbose
+        Start-Sleep -Milliseconds 500
+        Stop-Process -name EFACon -Force -Verbose
+        Start-Sleep -Milliseconds 500
+        Stop-Process -name EFACon -Force -Verbose
+        Start-Sleep -Milliseconds 500
+        Stop-Process -name EFACon -Force -Verbose
+        Remove-Item -Recurse -Force $folder
         & "C:\Program Files\7-Zip\7z.exe" x $Event.SourceEventArgs.Name "-o$folder" | Out-Host
 
         Start-Service EfaConSvc -Verbose
